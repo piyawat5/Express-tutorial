@@ -1,13 +1,21 @@
-GET http://localhost:3000/products HTTP/1.1
+@base_url = http://localhost
+
+@port = 3000
+
+@url = {{base_url}}:{{port}}
+
+@product_api = {{url}}/products
+
+GET {{product_api}} HTTP/1.1
 ###
 
-GET http://localhost:3000/products/total HTTP/1.1
+GET {{product_api}}/total HTTP/1.1
 ###
 
-GET http://localhost:3000/products/price?min=60000 HTTP/1.1
+GET {{product_api}}/price?min=100&max=200 HTTP/1.1
 ###
 
-GET http://localhost:3000/products/2 HTTP/1.1
+GET {{product_api}}/2 HTTP/1.1
 ###
 
-GET http://localhost:3000/products/search?search=ixs HTTP/1.1
+GET {{product_api}}/search?search=j HTTP/1.1
