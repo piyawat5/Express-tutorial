@@ -1,0 +1,13 @@
+GET http://localhost:3000/products HTTP/1.1
+###
+
+GET http://localhost:3000/products/total HTTP/1.1
+###
+
+GET http://localhost:3000/products/price?min=60000 HTTP/1.1
+###
+
+GET http://localhost:3000/products/2 HTTP/1.1
+###
+
+GET http://localhost:3000/products/search?search=ixs HTTP/1.1
