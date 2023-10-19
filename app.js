@@ -47,7 +47,7 @@ app.get("/products/search", (req, res) => {
     return true;
   });
 
-  res.json(result);
+  result.length > 0 ? res.json(result) : res.status(404).json(result);
 });
 
 app.get("/products/price", (req, res) => {
@@ -56,12 +56,13 @@ app.get("/products/price", (req, res) => {
     const price = product.price;
     return (!min || price >= min) && (!max || price <= max);
   });
-  res.json(result);
+
+  result.length > 0 ? res.json(result) : res.status(404).json(result);
 });
 
 app.get("/products/:id", (req, res) => {
   const result = products.filter((product) => product.id == req.params.id);
-  result.length > 0 ? res.json(result[0]) : res.json(null);
+  result.length > 0 ? res.json(result[0]) : res.status(404).json(null);
 });
 
 const port = 3000;
