@@ -54,15 +54,7 @@ app.get("/products/price", (req, res) => {
   const { min, max } = req.query;
   const result = products.filter((product) => {
     const price = product.price;
-    if (min && max) {
-      return price >= min && price <= max;
-    } else if (min) {
-      return price >= min;
-    } else if (max) {
-      return price <= max;
-    } else {
-      return product;
-    }
+    return (!min || price >= min) && (!max || price <= max);
   });
   res.json(result);
 });
