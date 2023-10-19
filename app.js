@@ -27,6 +27,29 @@ app.get("/products/total", (req, res) => {
   res.json({ total });
 });
 
+app.get("/products/search", (req, res) => {
+  const { search } = req.query;
+  if (!search) {
+    return res.json(products);
+  }
+  //strict search
+  //   const result = products.filter((product) => {
+  //     return product.name.toLowerCase().includes(search.toLowerCase());
+  //   });
+
+  const result = products.filter((product) => {
+    const productName = product.name.toLowerCase();
+    const searchTerm = search.toLowerCase();
+
+    for (let char of searchTerm) {
+      return !productName.includes(char) ? false : true;
+    }
+    return true;
+  });
+
+  res.json(result);
+});
+
 app.get("/products/price", (req, res) => {
   const { min, max } = req.query;
   const result = products.filter((product) => {
