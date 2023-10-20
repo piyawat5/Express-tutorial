@@ -19,3 +19,26 @@ GET {{product_api}}/2 HTTP/1.1
 ###
 
 GET {{product_api}}/search?search=j HTTP/1.1
+###
+
+POST {{product_api}} HTTP/1.1
+Content-Type:  application/json
+
+{
+    "name" : "Air port",
+    "price" : 390,
+    "stock" : 20
+}
+###
+
+PUT {{product_api}}/10 HTTP/1.1
+Content-Type:  application/json
+
+{
+    "name" : "jookroo",
+    "price" : 69,
+    "stock" : 69 
+}
+###
+
+DELETE {{product_api}}/6 HTTP/1.1
