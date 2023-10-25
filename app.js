@@ -1,9 +1,12 @@
 const express = require("express");
+const multer = require("multer");
 const app = express();
 
 //Middlewares
 app.use(express.json());
+const upload = multer();
 
+//Routes api
 app.use(require("./src/routes/routes"));
 
 const port = 3000;
