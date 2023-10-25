@@ -31,7 +31,7 @@ Content-Type:  application/json
 }
 ###
 
-PUT {{product_api}}/4 HTTP/1.1
+PUT {{product_api}}/1 HTTP/1.1
 Content-Type:  application/json
 
 {
@@ -42,3 +42,45 @@ Content-Type:  application/json
 ###
 
 DELETE {{product_api}}/5 HTTP/1.1
+###
+
+GET {{url}}/user HTTP/1.1
+###
+
+GET {{url}}/user/search?search=12 HTTP/1.1
+###
+
+GET {{url}}/user/7 HTTP/1.1
+###
+
+POST {{url}}/user HTTP/1.1
+Content-Type: application/json
+
+{
+    "username":"blacktyr5t",
+    "password" : "piyawat5",
+    "information" : {
+        "email" : "jame@hotmail",
+        "address": "bangna",
+       "gender" : "MALE",
+       "birth" : "2023-10-23T10:42:10.190Z" 
+    }
+}
+###
+
+PUT {{url}}/user/7 HTTP/1.1
+Content-Type: application/json
+
+{
+    "username":"Hibroooo777",
+    "password" : "piyawat7",
+    "information" : {
+        "email" : "jame@hotmail",
+        "address": "bangpoooo",
+       "gender" : "MALE",
+       "birth" : "2023-10-23T10:42:10.190Z" 
+    }
+}
+###
+
+DELETE {{url}}/user/5 HTTP/1.1
