@@ -21,17 +21,31 @@ GET {{product_api}}/12 HTTP/1.1
 GET {{product_api}}/search?search=a HTTP/1.1
 ###
 
-POST {{product_api}} HTTP/1.1
-Content-Type:  application/json
 
-{
-    "name" : "Air port",
-    "price" : 39000,
-    "stock" : 200
-}
+POST {{product_api}} HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+jame1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="stock"
+
+100 
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="price"
+
+690
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="demo.png"
+Content-Type: image/png
+
+< ./demo02.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 ###
 
-PUT {{product_api}}/1 HTTP/1.1
+PUT {{product_api}}/4 HTTP/1.1
 Content-Type:  application/json
 
 {

@@ -39,25 +39,43 @@ exports.findByName = (search) => {
   return result;
 };
 
-exports.findByPrice = ({ min, max }) =>
-  products.filter(
+exports.findByPrice = (query) => {
+  const { min, max } = query;
+  return products.filter(
     (product) =>
       (!min || product.price >= min) && (!max || product.price <= max)
   );
+};
 
 exports.findById = (id) => products.filter((product) => product.id == id);
 
-exports.add = ({ name, price, stock }) => {
-  let product = new Product(products.length + 1, name, "", price, stock);
+exports.add = (body, file) => {
+  const { name, price, stock } = body;
+  const { filename } = file;
+  let product = new Product(
+    products.length + 1,
+    name,
+    file ? filename : "",
+    price,
+    stock
+  );
   products = [...products, product];
 
   return product;
 };
 
-exports.edit = ({ id, name, price, stock }) => {
+exports.edit = (id, body, file) => {
+  const { name, price, stock } = body;
+  const { filename } = file;
   const findIndex = products.findIndex((product) => product.id == id);
   if (findIndex !== -1) {
-    products[findIndex] = { ...products[findIndex], name, price, stock };
+    products[findIndex] = {
+      ...products[findIndex],
+      image: file ? filename : products[findIndex].image,
+      name,
+      price,
+      stock,
+    };
     return products[findIndex];
   }
   return null;
