@@ -1,14 +1,26 @@
 const express = require("express");
-const multer = require("multer");
 const app = express();
+const cors = require("cors");
 
 //Middlewares
 app.use(express.json());
-const upload = multer();
+app.use("/image", express.static("./images"));
+
+//CORS
+const corsOptions = {
+  origin: [
+    "http://example.com",
+    "http://localhost:3000",
+    "https://www.w3schools.com",
+  ],
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 
 //Routes api
 app.use(require("./src/routes/routes"));
 
+//port
 const port = 3000;
 app.listen(port, () => {
   console.log(`Listening on port: ${port}`);

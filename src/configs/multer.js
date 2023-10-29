@@ -3,26 +3,27 @@ const fs = require("fs");
 
 exports.keyUpload = "image";
 
-exports.upload = {
+exports.config = {
   storage: multer.diskStorage({
     destination: (req, file, next) => {
       const folder = "./images/";
-      !fs.existsSync(folder) ? fs.mkdirSync(folder) : next(null, folder);
+      if (!fs.existsSync(folder)) {
+        fs.mkdirSync(folder);
+      }
+      next(null, folder);
     },
-    filename: (req, file, next) => {
+    filename: function (req, file, next) {
       const ext = file.mimetype.split("/")[1];
-      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-      next(null, `${file.fieldname}${uniqueSuffix}.${ext} `);
+      next(null, `${file.fieldname}-${Date.now()}.${ext}`);
     },
   }),
   limits: {
     fieldSize: 1024 * 1024 * 5,
   },
-  fileFilter: (req, file, next) => {
+  fileFilter(req, file, next) {
     const image = file.mimetype.startsWith("image/");
-
-    image
-      ? next(null, true)
-      : next({ message: "Oops, file must be image " }, false);
+    if (image) {
+      next(null, true);
+    } else [next({ message: "File type not supported" }, false)];
   },
 };

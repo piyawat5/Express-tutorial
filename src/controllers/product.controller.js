@@ -1,7 +1,7 @@
 const productServices = require("../services/product.service");
 const multer = require("multer");
 const multerConfig = require("../configs/multer");
-const upload = multer(multerConfig.upload).single(multerConfig.keyUpload);
+const upload = multer(multerConfig.config).single(multerConfig.keyUpload);
 
 exports.getProducts = (req, res) => {
   res.json(productServices.allProducts());
@@ -34,24 +34,31 @@ exports.getProduct = (req, res) => {
 };
 
 exports.addProduct = (req, res) => {
-  upload(req, res, (error) => {
-    if (error) {
-      console.log(`error: ${JSON.stringify(error)}`);
-      return res.status(404).json({ message: error.message });
-    }
-    return res.status(201).json(productServices.add(req.body, req.file));
-  });
-};
-
-exports.editProduct = (req, res) => {
-  upload(req, res, (error) => {
+  upload(req, res, async (error) => {
     if (error) {
       console.log(`error: ${JSON.stringify(error)}`);
       return res.status(500).json({ message: error.message });
     }
+    return res.status(201).json(await productServices.add(req.body, req.file));
+  });
+};
 
-    const result = productServices.edit(req.params.id, req.body, req.file);
-    result ? res.json(result) : res.status(404).json(result);
+exports.editProduct = (req, res) => {
+  upload(req, res, async (error) => {
+    if (error) {
+      console.log(`error: ${JSON.stringify(error)}`);
+      return res.status(500).json({ message: error.message });
+    }
+    const result = await productServices.edit(
+      req.params.id,
+      req.body,
+      req.file
+    );
+    if (result) {
+      res.json(result);
+    } else {
+      res.status(404).json({});
+    }
   });
 };
 

@@ -51,11 +51,10 @@ exports.findById = (id) => products.filter((product) => product.id == id);
 
 exports.add = (body, file) => {
   const { name, price, stock } = body;
-  const { filename } = file;
   let product = new Product(
     products.length + 1,
     name,
-    file ? filename : "",
+    file ? file.filename : "",
     price,
     stock
   );
@@ -66,12 +65,12 @@ exports.add = (body, file) => {
 
 exports.edit = (id, body, file) => {
   const { name, price, stock } = body;
-  const { filename } = file;
+
   const findIndex = products.findIndex((product) => product.id == id);
   if (findIndex !== -1) {
     products[findIndex] = {
       ...products[findIndex],
-      image: file ? filename : products[findIndex].image,
+      image: file ? file.filename : products[findIndex].image,
       name,
       price,
       stock,
