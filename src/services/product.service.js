@@ -1,3 +1,5 @@
+const productRepo = require("../repositories/product.repository");
+
 class Product {
   constructor(id, name, image, price, stock) {
     this.id = id;
@@ -13,79 +15,56 @@ let products = [
   new Product(2, "iPhone XS", "", 50000, 10),
 ];
 
-exports.allProducts = () => products;
+exports.allProducts = async () => await productRepo.findAll();
 
-exports.allProductsPrice = () => products.reduce((a, b) => a + b.price, 0);
+exports.allProductsPrice = async () => await productRepo.findAllPrice();
 
-exports.findByName = (search) => {
+exports.findByName = async (search) => {
   if (!search) {
-    return res.json(products);
+    return await productRepo.findAll();
   }
-  //strict search
-  //   const result = products.filter((product) => {
-  //     return product.name.toLowerCase().includes(search.toLowerCase());
-  //   });
 
-  const result = products.filter((product) => {
-    const productName = product.name.toLowerCase();
-    const searchTerm = search.toLowerCase();
+  return await productRepo.findByName();
+};
 
-    for (let char of searchTerm) {
-      return !productName.includes(char) ? false : true;
-    }
-    return true;
+exports.findByPrice = async (query) => {
+  const { min, max } = query;
+  return await productRepo.findByPrice(min, max);
+};
+
+exports.findById = async (id) => await productRepo.findById(id);
+
+exports.add = async (product, file) =>
+  await productRepo.postProduct({
+    ...product,
+    image: file ? file.filename : "",
   });
 
-  return result;
-};
+exports.edit = async (id, product, file) => {
+  const result = await productRepo.findById(id);
 
-exports.findByPrice = (query) => {
-  const { min, max } = query;
-  return products.filter(
-    (product) =>
-      (!min || product.price >= min) && (!max || product.price <= max)
-  );
-};
-
-exports.findById = (id) => products.filter((product) => product.id == id);
-
-exports.add = (body, file) => {
-  const { name, price, stock } = body;
-  let product = new Product(
-    products.length + 1,
-    name,
-    file ? file.filename : "",
-    price,
-    stock
-  );
-  products = [...products, product];
-
-  return product;
-};
-
-exports.edit = (id, body, file) => {
-  const { name, price, stock } = body;
-
-  const findIndex = products.findIndex((product) => product.id == id);
-  if (findIndex !== -1) {
-    products[findIndex] = {
-      ...products[findIndex],
-      image: file ? file.filename : products[findIndex].image,
-      name,
-      price,
-      stock,
-    };
-    return products[findIndex];
+  if (result) {
+    const updated = await productRepo.putProduct(result.id, {
+      ...product,
+      image: file ? file.filename : result.image,
+    });
+    if (updated) {
+      return await productRepo.findById(id);
+    }
   }
   return null;
 };
 
-exports.delete = (id) => {
-  const findIndex = products.findIndex((product) => product.id == id);
+exports.delete = async (id) => {
+  const result = await productRepo.findById(id);
 
-  if (findIndex !== -1) {
-    products.splice(findIndex, 1);
-    return id;
+  if (result) {
+    const deleted = await productRepo.deleteProduct(result.id);
+
+    if (deleted) {
+      return await result;
+    }
+  } else {
+    return null;
   }
-  return id;
 };

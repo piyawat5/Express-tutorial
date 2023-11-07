@@ -3,34 +3,34 @@ const multer = require("multer");
 const multerConfig = require("../configs/multer");
 const upload = multer(multerConfig.config).single(multerConfig.keyUpload);
 
-exports.getProducts = (req, res) => {
-  res.json(productServices.allProducts());
+exports.getProducts = async (req, res) => {
+  res.json(await productServices.allProducts());
 };
 
-exports.getProductByTotal = (req, res) => {
-  const result = productServices.allProductsPrice();
+exports.getProductByTotal = async (req, res) => {
+  const result = await productServices.allProductsPrice();
   res.json({ result });
 };
 
-exports.getProductsBySearch = (req, res) => {
+exports.getProductsBySearch = async (req, res) => {
   const { search } = req.query;
   if (!search) {
-    res.json(productServices.allProducts);
+    res.json(await productServices.allProducts());
   } else {
-    const result = productServices.findByName(search);
+    const result = await productServices.findByName(search);
     result.length > 0 ? res.json(result) : res.status(404).json(result);
   }
 };
 
-exports.getProductByPrice = (req, res) => {
-  const result = productServices.findByPrice(req.query);
+exports.getProductByPrice = async (req, res) => {
+  const result = await productServices.findByPrice(req.query);
   result.length > 0 ? res.json(result) : res.status(404).json(result);
 };
 
-exports.getProduct = (req, res) => {
+exports.getProduct = async (req, res) => {
   const id = req.params.id;
-  const result = productServices.findById(id);
-  result.length > 0 ? res.json(result[0]) : res.status(404).json(null);
+  const result = await productServices.findById(id);
+  result ? res.json(result) : res.status(404).json(null);
 };
 
 exports.addProduct = (req, res) => {
@@ -62,8 +62,8 @@ exports.editProduct = (req, res) => {
   });
 };
 
-exports.deleteProduct = (req, res) => {
+exports.deleteProduct = async (req, res) => {
   const id = req.params.id;
-  const result = productServices.delete(id);
+  const result = await productServices.delete(id);
   result ? res.json(result) : res.status(404).json(result);
 };
