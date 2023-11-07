@@ -14,7 +14,7 @@ exports.findByName = async (search) =>
   await db.Products.findAll({
     where: {
       name: {
-        [Op.substring]: search,
+        [Op.substring]: `%${search}%`,
       },
     },
   });

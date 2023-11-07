@@ -24,7 +24,7 @@ exports.findByName = async (search) => {
     return await productRepo.findAll();
   }
 
-  return await productRepo.findByName();
+  return await productRepo.findByName(search);
 };
 
 exports.findByPrice = async (query) => {
