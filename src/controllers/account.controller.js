@@ -10,5 +10,8 @@ exports.login = async (req, res) => {
     res.status(401).json();
     return;
   }
-  res.json(token);
+  res.json({ token });
 };
+
+//stageless
+exports.info = (req, res) => res.json({ username: req.sub, role: req.role });
