@@ -92,8 +92,8 @@ POST {{account_api}}/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "jame02",
-    "password": "jame01"
+    "username": "jame03",
+    "password": "password la"
 }
 ###
 
