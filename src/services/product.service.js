@@ -1,20 +1,5 @@
 const productRepo = require("../repositories/product.repository");
 
-class Product {
-  constructor(id, name, image, price, stock) {
-    this.id = id;
-    this.name = name;
-    this.image = image;
-    this.price = price;
-    this.stock = stock;
-  }
-}
-
-let products = [
-  new Product(1, "Macbook Pro", "", 90000, 0),
-  new Product(2, "iPhone XS", "", 50000, 10),
-];
-
 exports.allProducts = async () => await productRepo.findAll();
 
 exports.allProductsPrice = async () => await productRepo.findAllPrice();
