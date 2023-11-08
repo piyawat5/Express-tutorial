@@ -6,6 +6,8 @@
 
 @product_api = {{url}}/products
 
+@account_api = {{url}}/account
+
 GET {{product_api}} HTTP/1.1
 ###
 
@@ -28,7 +30,7 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="name"
 
-updatedddd
+jame post
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="stock"
 
@@ -68,6 +70,25 @@ Content-Type: image/png
 ###
 
 DELETE {{product_api}}/3 HTTP/1.1
+###
+
+POST {{account_api}}/register HTTP/1.1
+Content-Type:application/json 
+
+{
+    "username": "jamepiyawat",
+    "password": "password",
+    "role" : "Admin"
+} 
+###
+
+POST {{account_api}}/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "jamepiyawat",
+    "password": "password"
+}
 ###
 
 GET {{url}}/user HTTP/1.1

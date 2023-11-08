@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Account",
+      modelName: "Accounts",
       underscored: true,
       freezeTableName: true,
       underscoredAll: true,
