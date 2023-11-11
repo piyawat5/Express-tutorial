@@ -3,12 +3,11 @@
     "storage": "./dev.sqlite3",
     "dialect": "sqlite"
   },
-  "test": {
-    "storage": "./dev.sqlite3",
-    "dialect": "sqlite"
-  },
   "production": {
-    "storage": "./dev.sqlite3",
-    "dialect": "sqlite"
+    "username": "kidymhcw",
+    "password": "ZmJ_mPtb5qhaPK5sauXZ-bft3-8Lrmb6",
+    "database": "kidymhcw",
+    "host": "floppy.db.elephantsql.com",
+    "dialect": "postgres"
   }
 }
