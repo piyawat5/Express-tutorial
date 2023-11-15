@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./src/configs/swagger");
 
 //Middlewares
 app.use(express.json());
@@ -19,6 +21,9 @@ app.use(cors());
 
 //Routes api
 app.use(require("./src/routes/routes"));
+
+//swagger
+app.use("/swagger-ui", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //port
 const port = 3000;
