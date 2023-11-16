@@ -3,6 +3,14 @@ const multer = require("multer");
 const multerConfig = require("../configs/multer");
 const upload = multer(multerConfig.config).single(multerConfig.keyUpload);
 
+/**
+ * @swagger
+ * /products:
+ *  get:
+ *    summary: Returns the list of all the products
+ *    tags: [Products]
+ */
+
 exports.getProducts = async (req, res) => {
   res.json(await productServices.allProducts());
 };
@@ -67,3 +75,10 @@ exports.deleteProduct = async (req, res) => {
   const result = await productServices.delete(id);
   result ? res.json(result) : res.status(404).json(result);
 };
+
+/**
+ * @swagger
+ * tags:
+ *    name: Products
+ *    description: Product management API
+ */

@@ -1,8 +1,10 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+// if (env !== "production") {
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./src/configs/swagger");
+// }
 
 //Middlewares
 app.use(express.json());
