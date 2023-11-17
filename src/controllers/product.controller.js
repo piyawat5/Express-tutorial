@@ -9,16 +9,69 @@ const upload = multer(multerConfig.config).single(multerConfig.keyUpload);
  *  get:
  *    summary: Returns the list of all the products
  *    tags: [Products]
+ *    responses:
+ *      200:
+ *        description: show all products
+ *        content:
+ *          application/json:
+ *            schema:
+ *              item:
+ *                $ref: '#/components/schemas/AllProductsResponse'
+ *      401:
+ *        description: Un Authenticated
+ *    security: [{bearerAuth: []}]
  */
 
 exports.getProducts = async (req, res) => {
   res.json(await productServices.allProducts());
 };
 
+/**
+ * @swagger
+ * /products/total:
+ *  get:
+ *    summary: Returns the count of all the products
+ *    tags: [Products]
+ *    responses:
+ *      200:
+ *        description: Returns the count of all the products
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ProductCountResponse'
+ *      401:
+ *        description: Un Authenticated
+ *    security: [{bearerAuth: []}]
+ */
+
 exports.getProductByTotal = async (req, res) => {
   const result = await productServices.allProductsPrice();
   res.json({ result });
 };
+
+/**
+ * @swagger
+ * /products/price:
+ *  get:
+ *    summary: search price
+ *    tags: [Products]
+ *    requestQuery:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/ProductsPriceRequest'
+ *    responses:
+ *      200:
+ *        description: search price
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ProductsPriceResponse'
+ *      401:
+ *        description: Un Authenticated
+ *    security: [{bearerAuth: []}]
+ */
 
 exports.getProductsBySearch = async (req, res) => {
   const { search } = req.query;
@@ -29,6 +82,30 @@ exports.getProductsBySearch = async (req, res) => {
     result.length > 0 ? res.json(result) : res.status(404).json(result);
   }
 };
+
+/**
+ * @swagger
+ * /products/:id:
+ *  get:
+ *    summary: search price
+ *    tags: [Products]
+ *    requestQuery:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/ProductsPriceRequest'
+ *    responses:
+ *      200:
+ *        description: search price
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ProductsPriceResponse'
+ *      401:
+ *        description: Un Authenticated
+ *    security: [{bearerAuth: []}]
+ */
 
 exports.getProductByPrice = async (req, res) => {
   const result = await productServices.findByPrice(req.query);
@@ -80,5 +157,33 @@ exports.deleteProduct = async (req, res) => {
  * @swagger
  * tags:
  *    name: Products
- *    description: Product management API
+ *    description: Products management
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *    AllProductsResponse:
+ *      type: object
+ *      properties:
+ *        id:
+ *          type: string
+ *          description: The auto-generated id of the account
+ *        username:
+ *          type: string
+ *          description: The account username
+ *        password:
+ *          type: string
+ *          description: The account password
+ *        role:
+ *          type: string
+ *          description: The account role
+ *        created_at:
+ *          type: string
+ *          description: The account created
+ *        updated_at:
+ *          type: string
+ *          description: The account updated
+ *
  */
