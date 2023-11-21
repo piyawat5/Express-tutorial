@@ -3,8 +3,6 @@ const productController = require("../controllers/product.controller");
 
 router.get("/", productController.getProducts);
 
-router.get("/total", productController.getProductByTotal);
-
 router.get("/search", productController.getProductsBySearch);
 
 router.get("/price", productController.getProductByPrice);

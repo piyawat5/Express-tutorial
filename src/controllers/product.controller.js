@@ -15,8 +15,9 @@ const upload = multer(multerConfig.config).single(multerConfig.keyUpload);
  *        content:
  *          application/json:
  *            schema:
- *              item:
- *                $ref: '#/components/schemas/AllProductsResponse'
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/ProductResponse'
  *      401:
  *        description: Un Authenticated
  *    security: [{bearerAuth: []}]
@@ -28,51 +29,32 @@ exports.getProducts = async (req, res) => {
 
 /**
  * @swagger
- * /products/total:
+ * /products/price?search={search}:
  *  get:
- *    summary: Returns the count of all the products
+ *    summary: search product
  *    tags: [Products]
+ *    parameters:
+ *      - in: query
+ *        name: search
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: search product
  *    responses:
  *      200:
- *        description: Returns the count of all the products
+ *        description: search product
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/ProductCountResponse'
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/ProductResponse'
+ *      404:
+ *        description: product not found
  *      401:
  *        description: Un Authenticated
  *    security: [{bearerAuth: []}]
  */
-
-exports.getProductByTotal = async (req, res) => {
-  const result = await productServices.allProductsPrice();
-  res.json({ result });
-};
-
-/**
- * @swagger
- * /products/price:
- *  get:
- *    summary: search price
- *    tags: [Products]
- *    requestQuery:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/ProductsPriceRequest'
- *    responses:
- *      200:
- *        description: search price
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/ProductsPriceResponse'
- *      401:
- *        description: Un Authenticated
- *    security: [{bearerAuth: []}]
- */
-
 exports.getProductsBySearch = async (req, res) => {
   const { search } = req.query;
   if (!search) {
@@ -85,23 +67,34 @@ exports.getProductsBySearch = async (req, res) => {
 
 /**
  * @swagger
- * /products/:id:
+ * /products/price?min={min}&max={max}:
  *  get:
- *    summary: search price
+ *    summary: search product price
  *    tags: [Products]
- *    requestQuery:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/ProductsPriceRequest'
+ *    parameters:
+ *      - in: query
+ *        name: min
+ *        schema:
+ *          type: number
+ *        required: true
+ *        description: search min product price
+ *      - in: query
+ *        name: max
+ *        schema:
+ *          type: number
+ *        required: true
+ *        description: search max product price
  *    responses:
  *      200:
- *        description: search price
+ *        description: search product price
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/ProductsPriceResponse'
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/ProductResponse'
+ *      404:
+ *        description: product not found
  *      401:
  *        description: Un Authenticated
  *    security: [{bearerAuth: []}]
@@ -112,11 +105,64 @@ exports.getProductByPrice = async (req, res) => {
   result.length > 0 ? res.json(result) : res.status(404).json(result);
 };
 
+/**
+ * @swagger
+ * /products/{id}:
+ *  get:
+ *    summary: search product price
+ *    tags: [Products]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: number
+ *        required: true
+ *        description: search min product price
+ *    responses:
+ *      200:
+ *        description: search product price
+ *        content:
+ *          application/json:
+ *            schema:
+ *                $ref: '#/components/schemas/ProductResponse'
+ *      404:
+ *        description: product not found
+ *      401:
+ *        description: Un Authenticated
+ *    security: [{bearerAuth: []}]
+ */
+
 exports.getProduct = async (req, res) => {
   const id = req.params.id;
   const result = await productServices.findById(id);
   result ? res.json(result) : res.status(404).json(null);
 };
+
+/**
+ * @swagger
+ * /products:
+ *  post:
+ *    summary: Returns the list of all the products
+ *    tags: [Products]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        multipart/form-data:
+ *          schema:
+ *            $ref: '#/components/schemas/PostProductRequest'
+ *    responses:
+ *      200:
+ *        description: show all products
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ProductResponse'
+ *      500:
+ *        description: something went wrong
+ *      401:
+ *        description: Un Authenticated
+ *    security: [{bearerAuth: []}]
+ */
 
 exports.addProduct = (req, res) => {
   upload(req, res, async (error) => {
@@ -127,6 +173,41 @@ exports.addProduct = (req, res) => {
     return res.status(201).json(await productServices.add(req.body, req.file));
   });
 };
+
+/**
+ * @swagger
+ * /products/{id}:
+ *  put:
+ *    summary: Returns the list of all the products
+ *    tags: [Products]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: number
+ *        required: true
+ *        description: The product id
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        multipart/form-data:
+ *          schema:
+ *            $ref: '#/components/schemas/PostProductRequest'
+ *    responses:
+ *      200:
+ *        description: show all products
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ProductResponse'
+ *      500:
+ *        description: something went wrong
+ *      404:
+ *        description: product not found
+ *      401:
+ *        description: Un Authenticated
+ *    security: [{bearerAuth: []}]
+ */
 
 exports.editProduct = (req, res) => {
   upload(req, res, async (error) => {
@@ -147,6 +228,32 @@ exports.editProduct = (req, res) => {
   });
 };
 
+/**
+ * @swagger
+ * /products/{id}:
+ *  delete:
+ *    summary: Returns the list of all the products
+ *    tags: [Products]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: number
+ *        required: true
+ *        description: The product id
+ *    responses:
+ *      200:
+ *        description: show all products
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ProductResponse'
+ *      404:
+ *        description: product not found
+ *      401:
+ *        description: Un Authenticated
+ *    security: [{bearerAuth: []}]
+ */
 exports.deleteProduct = async (req, res) => {
   const id = req.params.id;
   const result = await productServices.delete(id);
@@ -164,19 +271,22 @@ exports.deleteProduct = async (req, res) => {
  * @swagger
  * components:
  *   schemas:
- *    AllProductsResponse:
+ *    ProductResponse:
  *      type: object
  *      properties:
  *        id:
  *          type: string
  *          description: The auto-generated id of the account
- *        username:
+ *        name:
+ *          type: string
+ *          description: The name product
+ *        image:
  *          type: string
  *          description: The account username
- *        password:
+ *        price:
  *          type: string
  *          description: The account password
- *        role:
+ *        stock:
  *          type: string
  *          description: The account role
  *        created_at:
@@ -185,5 +295,26 @@ exports.deleteProduct = async (req, res) => {
  *        updated_at:
  *          type: string
  *          description: The account updated
- *
+ *    PostProductRequest:
+ *      type: object
+ *      required:
+ *        -name
+ *        -price
+ *        -stock
+ *      properties:
+ *        name:
+ *          type: string
+ *          description: The account username
+ *        image:
+ *          type: array
+ *          items:
+ *            type: string
+ *            format: binary
+ *          description: The account password
+ *        price:
+ *          type: string
+ *          description: The account role
+ *        stock:
+ *          type: string
+ *          description: The account role
  */
